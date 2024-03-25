@@ -1,4 +1,10 @@
 ---
+title: "iteration_exp"
+format: html
+editor: visual
+---
+
+---
 title: "Iteration"
 format: html
 ---
@@ -68,7 +74,7 @@ Reading data.
 ```{r}
 #| message: false
 
-nematode <- read_csv("../Data/nematode_rs.csv")
+nematode <- read_csv("Data/nematode_rs.csv")
 
 nematode
 ```
@@ -159,19 +165,20 @@ Let's write a function to return to us the mean and coefficient of variation. If
 
 First, a function for CV.  
 ```{r}
-meancv <- function(x){
+meancv <- function(data, var){
   
   # Calculate intermediary steps of mean and sd
-  mean <- mean(x, na.rm = T)
-  sd <- sd(x, na.rm = T)
+  mean <-summarize(mean({{var}}, na.rm = T))
+  sd <- summmarize(sd({{var}}, na.rm = T))
   # Calculate cv
-  cv <- (sd/mean)*100
+ # cv <- (sd/mean)*100
   # Combine them into a data frame
-  df <- data.frame(mean = mean,
-                   cv = cv 
-                   )
+
   # Return the data frame
-  df
+  #cv
+  df <- data.frame(mean = mean,
+                   sd = sd)
+  return(df)
   
 }
 
@@ -180,7 +187,8 @@ meancv
 
 Let's apply it to one of the vegetation indices  
 ```{r}
-meancv(nematode_w$rndvi)
+nematode_w %>% 
+  meancv(mel_s:sum_s )
 ```
 
 # 5) Loops  
